@@ -5,11 +5,8 @@ var fs = require('fs'),
 
 
 var getVersions = function () {
-    var names = fs.readdirSync('./'), versions = [];
-    for (var i = 0; i < names.length; i++) {
-        if(names[i].match(/^\d{1,2}\.\d{1,2}\.\d{1,2}$/)) versions.push(names[i]);
-    };
-    return versions;
+    var names = fs.readdirSync('./');
+    return names.filter(semver.valid);
 };
 var versions = getVersions();
 
