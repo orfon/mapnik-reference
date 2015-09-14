@@ -1,30 +1,43 @@
 var fs = require('fs'),
     path = require('path'),
-    existsSync = require('fs').existsSync || require('path').existsSync;
+    semver = require('semver'),
+    existsSync = require('fs').existsSync || path.existsSync;
 
-var versions = [
- '2.0.0',
- '2.0.1',
- '2.0.2',
- '2.1.0',
- '2.1.1',
- '2.2.0',
- '2.3.0',
- '3.0.0',
- '3.0.3',
- '3.0.4'
-];
+
+var getVersions = function () {
+    var names = fs.readdirSync('./'), versions = [];
+    for (var i = 0; i < names.length; i++) {
+        if(names[i].match(/^\d{1,2}\.\d{1,2}\.\d{1,2}$/)) versions.push(names[i]);
+    };
+    return versions;
+};
+var versions = getVersions();
+
+var getSatisfyingVersion = function (wanted) {
+    var version = semver.maxSatisfying(versions, wanted), parsed;
+    if (!version) {
+        try {
+            parsed = semver(wanted);
+            parsed.patch = 'x';
+            version = semver.maxSatisfying(versions, parsed.format());
+        } catch (err) {
+            version = null;
+        }
+    }
+    return version;
+};
 
 module.exports.versions = versions;
-
-module.exports.load = function(version) {
-    if (versions.indexOf(version) <= -1) {
-	throw new Error("Unknown mapnik-reference version: '" + version + "'");
+module.exports.latest = versions[versions.length - 1];
+module.exports.load = function(wanted) {
+    var version = getSatisfyingVersion(wanted);
+    if (!version) {
+        throw new Error("Unknown mapnik-reference version: '" + wanted + "'");
     }
     var ref = require(path.join(__dirname, version, 'reference.json'));
     var ds_path = path.join(__dirname, version, 'datasources.json');
     if (existsSync(ds_path)) {
-	ref.datasources = require(ds_path).datasources;
+	   ref.datasources = require(ds_path).datasources;
     }
     return ref;
 }
