@@ -1,6 +1,13 @@
-var fs = require('fs'),
-    path = require('path'),
-    existsSync = require('fs').existsSync || require('path').existsSync;
+var fs = require('fs');
+try {
+    var path = require('path');
+} catch (e) {
+    // ringo compatibility
+    var path = require('fs');
+    __dirname = module.resolve("./");
+}
+
+var existsSync = fs.existsSync || path.existsSync || fs.exists;
 
 var versions = [
  '2.0.0',
