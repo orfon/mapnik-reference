@@ -2,14 +2,19 @@
   "author": "Mapnik Developers",
   "name": "mapnik-reference",
   "description": "Reference for Mapnik Styling Options",
+  "keywords": ["mapnik", "reference"],
   "version": "8.4.0",
-  "repository": {
+  "repositories": [{
     "type": "git",
     "url": "git://github.com/mapnik/mapnik-reference.git"
-  },
+  }],
   "scripts": {
       "test": "mocha -R spec --timeout 50000"
   },
+  "licenses": [{
+    "type": "public domain",
+    "url": "https://github.com/orfon/mapnik-reference/blob/master/LICENSE.md"
+  }],
   "devDependencies": {
     "mocha": "1.x",
     "glob":"4.x"
