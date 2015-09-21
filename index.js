@@ -4,7 +4,7 @@ try {
 } catch (e) {
     // ringo compatibility
     var path = require('fs');
-    __dirname = module.resolve("./");
+    var __dirname = module.resolve("./");
 }
 
 var existsSync = fs.existsSync || path.existsSync || fs.exists;
